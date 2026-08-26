@@ -4,7 +4,7 @@ Angular component library used across Endoy projects. It provides standalone com
 ## Requirements
 - Angular `^22.0.0` (`common`, `core`, `forms`, `cdk` are peer dependencies)
 - A Tailwind CSS v4 setup in the consuming app (the library ships design tokens, not precompiled CSS)
-- [`@lucide/angular`](https://lucide.dev/guide/angular/) `^1.31.0` for any component that renders an icon (see [Icons](#icons))
+- [`@lucide/angular`](https://lucide.dev/guide/angular/) `^1.31.0` for any component that renders an icon
 
 ## Installation
 The package is published to the GitHub npm registry, so add `@endoy-dev` packages there in your `.npmrc`:
