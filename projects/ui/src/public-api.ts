@@ -4,6 +4,7 @@
 
 export * from './lib/button/button.component';
 export * from './lib/checkbox/checkbox.component';
+export * from './lib/collapsible/collapsible.component';
 export * from './lib/confirm/confirm.service';
 export * from './lib/confirm/confirm-dialog.component';
 export * from './lib/date-picker/date-picker.component';
