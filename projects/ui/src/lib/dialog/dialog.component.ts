@@ -15,6 +15,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { LucideX } from '@lucide/angular';
 import { lockBodyScroll, unlockBodyScroll } from '../util/body-scroll-lock';
+import { EUI_LABELS } from '../i18n/ui-labels';
 
 export type DialogSize = 'sm' | 'md' | 'lg';
 
@@ -54,7 +55,7 @@ let dialogSeq = 0;
                      hover:bg-surface-200/60 hover:text-surface-800
                      dark:text-surface-400 dark:hover:bg-surface-700/60 dark:hover:text-surface-100
                      focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 dark:focus-visible:ring-primary-400/50"
-              aria-label="Close dialog"
+              [attr.aria-label]="labels().closeDialog"
               (click)="close()"
             >
               <svg lucideX [size]="20"></svg>
@@ -76,6 +77,7 @@ let dialogSeq = 0;
   `,
 })
 export class Dialog {
+  protected readonly labels = inject(EUI_LABELS);
   public readonly visible = model<boolean>(false);
 
   public readonly header = input<string>('');

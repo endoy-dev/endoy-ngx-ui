@@ -9,6 +9,7 @@ import {
   LucideX,
 } from '@lucide/angular';
 import { ToastItem, ToastSeverity, ToastService } from './toast.service';
+import { EUI_LABELS } from '../i18n/ui-labels';
 
 const ICONS: Record<ToastSeverity, LucideIconInput> = {
   success: LucideCircleCheck,
@@ -61,7 +62,7 @@ const ICONS: Record<ToastSeverity, LucideIconInput> = {
                    hover:bg-surface-200/60 hover:text-surface-700
                    dark:hover:bg-surface-700/60 dark:hover:text-surface-100
                    focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 dark:focus-visible:ring-primary-400/50"
-                  aria-label="Dismiss notification"
+                  [attr.aria-label]="labels().dismissNotification"
                   (click)="toastService.remove(toast.id)">
             <svg lucideX [size]="14" [strokeWidth]="2.2"></svg>
           </button>
@@ -104,6 +105,7 @@ const ICONS: Record<ToastSeverity, LucideIconInput> = {
   ],
 })
 export class Toast {
+  protected readonly labels = inject(EUI_LABELS);
   readonly toastService = inject(ToastService);
 
   protected iconFor(toast: ToastItem): LucideIconInput {

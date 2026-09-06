@@ -1,18 +1,10 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ConnectedPosition } from '@angular/cdk/overlay';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  ElementRef,
-  forwardRef,
-  input,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, forwardRef, inject, input, signal, viewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LucideChevronDown, LucideCircleCheck } from '@lucide/angular';
 import { Input } from '../input/input.directive';
+import { EUI_LABELS } from '../i18n/ui-labels';
 
 const DROPDOWN_POSITIONS: ConnectedPosition[] = [
   { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 4 },
@@ -47,7 +39,7 @@ const DROPDOWN_POSITIONS: ConnectedPosition[] = [
       <span class="flex items-center gap-1 shrink-0">
         @if (showClear() && hasValue() && !loading()) {
           <span role="button"
-                aria-label="Clear"
+                [attr.aria-label]="labels().clear"
                 class="flex items-center text-surface-400 hover:text-surface-600 dark:hover:text-surface-200 transition-colors text-lg leading-none"
                 (click)="clear($event)">&times;</span>
         }
@@ -74,7 +66,7 @@ const DROPDOWN_POSITIONS: ConnectedPosition[] = [
             <input euiInput
                    type="text"
                    class="w-full"
-                   placeholder="Search"
+                   [placeholder]="labels().search"
                    [value]="filterText()"
                    (input)="onFilterInput($event)"
                    (click)="$event.stopPropagation()"/>
@@ -87,7 +79,7 @@ const DROPDOWN_POSITIONS: ConnectedPosition[] = [
               Loading...
             </div>
           } @else if (filteredOptions().length === 0) {
-            <div class="px-3 py-4 text-center text-sm text-surface-400">No results found</div>
+            <div class="px-3 py-4 text-center text-sm text-surface-400">{{ labels().noResultsFound }}</div>
           } @else {
             @for (opt of filteredOptions(); track $index) {
               <button type="button"
@@ -106,6 +98,7 @@ const DROPDOWN_POSITIONS: ConnectedPosition[] = [
   `,
 })
 export class Select implements ControlValueAccessor {
+  protected readonly labels = inject(EUI_LABELS);
   public readonly options = input<any[]>([]);
   public readonly optionLabel = input<string>();
   public readonly optionValue = input<string>();

@@ -26,5 +26,43 @@ Import the theme once from your Tailwind entry stylesheet (the one that already 
 @import "@endoy-dev/ngx-ui/theme.css";
 ```
 
+Register the library once in your application config:
+
+```ts
+import { provideEndoyUI } from '@endoy-dev/ngx-ui';
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideEndoyUI()],
+};
+```
+
+## Translations
+Components ship with English labels. Pass your own through `provideEndoyUI` to override any of them, anything you leave out keeps its default:
+
+```ts
+provideEndoyUI({
+  labels: { cancel: 'Annuleren', confirm: 'Bevestigen' },
+});
+```
+
+`labels` also accepts a `Signal` (or a factory returning one), so labels follow a language switch without any further wiring. With `@ngx-translate/core`, for example:
+
+```ts
+provideEndoyUI({
+  labels: () => {
+    const translateService = inject(TranslateService);
+    const languageChange = toSignal(translateService.onLangChange);
+
+    return computed(() => {
+      languageChange();
+
+      return { cancel: translateService.instant('common.cancel') };
+    });
+  },
+});
+```
+
+The full set of keys is the `EuiLabels` interface, with `DEFAULT_EUI_LABELS` as the English baseline.
+
 ## AI assistance
 Parts of this library were created with the help of AI (Claude/Claude Code).

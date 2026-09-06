@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { LucideDynamicIcon, LucideIconInput, LucideInfo, LucideTrash2 } from '@lucide/angular';
 import { Dialog } from '../dialog/dialog.component';
 import { ConfirmService } from './confirm.service';
+import { EUI_LABELS } from '../i18n/ui-labels';
 
 @Component({
   selector: 'eui-confirm-dialog',
@@ -37,7 +38,7 @@ import { ConfirmService } from './confirm.service';
                    hover:bg-surface-200/60 dark:text-surface-200 dark:hover:bg-surface-700/60
                    focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 dark:focus-visible:ring-primary-400/50"
                   (click)="confirmService.reject()">
-            {{ request.rejectLabel ?? 'Cancel' }}
+            {{ request.rejectLabel ?? labels().cancel }}
           </button>
           <button type="button"
                   class="rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
@@ -53,7 +54,7 @@ import { ConfirmService } from './confirm.service';
                   [class.to-magenta-500]="severity() === 'primary'"
                   [class.focus-visible:ring-primary-500]="severity() === 'primary'"
                   (click)="confirmService.accept()">
-            {{ request.acceptLabel ?? 'Confirm' }}
+            {{ request.acceptLabel ?? labels().confirm }}
           </button>
         }
       </ng-template>
@@ -61,10 +62,11 @@ import { ConfirmService } from './confirm.service';
   `,
 })
 export class ConfirmDialog {
+  protected readonly labels = inject(EUI_LABELS);
   readonly confirmService = inject(ConfirmService);
 
   protected readonly severity = computed(() => this.confirmService.activeRequest()?.severity ?? 'primary');
-  protected readonly headerText = computed(() => (this.severity() === 'danger' ? 'Confirm deletion' : 'Please confirm'));
+  protected readonly headerText = computed(() => (this.severity() === 'danger' ? this.labels().confirmDeletionHeader : this.labels().confirmHeader));
   protected readonly iconName = computed<LucideIconInput>(() => (this.severity() === 'danger' ? LucideTrash2 : LucideInfo));
 
   protected onHide(): void {

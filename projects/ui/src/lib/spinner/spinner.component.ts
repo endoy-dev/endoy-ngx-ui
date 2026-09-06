@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { EUI_LABELS } from '../i18n/ui-labels';
 
 @Component({
   selector: 'eui-spinner',
@@ -9,7 +10,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
              border-surface-200 border-t-primary-600 border-r-accent-600
              dark:border-surface-700 dark:border-t-primary-400 dark:border-r-accent-400"
           role="progressbar"
-          aria-label="Loading"
+          [attr.aria-label]="labels().loading"
           [style.width]="size()"
           [style.height]="size()"
           [style.border-width]="borderWidth()"
@@ -17,6 +18,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
   `,
 })
 export class Spinner {
+  protected readonly labels = inject(EUI_LABELS);
   public readonly size = input<string>('50px');
 
   protected readonly borderWidth = computed(() => {

@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, forwardRef, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, forwardRef, inject, input, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LucideEye, LucideEyeOff } from '@lucide/angular';
 import { Input } from '../input/input.directive';
+import { EUI_LABELS } from '../i18n/ui-labels';
 
 @Component({
   selector: 'eui-password',
@@ -29,7 +30,7 @@ import { Input } from '../input/input.directive';
         <button type="button"
                 tabindex="-1"
                 class="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded text-surface-400 hover:text-surface-600 dark:hover:text-surface-200 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50"
-                [attr.aria-label]="visible() ? 'Hide password' : 'Show password'"
+                [attr.aria-label]="visible() ? labels().hidePassword : labels().showPassword"
                 (click)="toggle()">
           @if (visible()) {
             <svg lucideEyeOff [size]="18" [strokeWidth]="1.75"></svg>
@@ -42,6 +43,7 @@ import { Input } from '../input/input.directive';
   `,
 })
 export class Password implements ControlValueAccessor {
+  protected readonly labels = inject(EUI_LABELS);
   public readonly placeholder = input<string>('');
   public readonly toggleMask = input(true);
   public readonly disabled = input(false);

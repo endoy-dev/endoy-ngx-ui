@@ -4,6 +4,8 @@
 
 export * from './lib/button/button.component';
 export * from './lib/checkbox/checkbox.component';
+export * from './lib/collapsible/collapsible.component';
+export * from './lib/config/endoy-ui.config';
 export * from './lib/confirm/confirm.service';
 export * from './lib/confirm/confirm-dialog.component';
 export * from './lib/date-picker/date-picker.component';
@@ -14,6 +16,8 @@ export * from './lib/dropdown/dropdown-close.directive';
 export * from './lib/dropdown/dropdown-trigger.directive';
 export * from './lib/file-upload/file-upload.component';
 export * from './lib/icon-field/icon-field.component';
+export { DEFAULT_EUI_LABELS, EUI_LABELS } from './lib/i18n/ui-labels';
+export type { EuiLabels, EuiLabelsSource } from './lib/i18n/ui-labels';
 export * from './lib/input/input.directive';
 export * from './lib/message/message.component';
 export * from './lib/multi-select/multi-select.component';

@@ -1,27 +1,14 @@
 import { ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  ElementRef,
-  forwardRef,
-  input,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, forwardRef, inject, input, signal, viewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LucideCalendar, LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
+import { EUI_LABELS } from '../i18n/ui-labels';
 
 const DROPDOWN_POSITIONS: ConnectedPosition[] = [
   { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 4 },
   { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -4 },
 ];
 
-const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
-const WEEKDAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
 interface DayCell {
   day: number;
@@ -51,7 +38,7 @@ interface DayCell {
             (click)="toggle()"
             (blur)="onTouched()">
       <span class="truncate {{ value() ? '' : 'text-surface-400 dark:text-surface-500' }}">
-        {{ value() ? displayValue() : 'dd/mm/yyyy' }}
+        {{ value() ? displayValue() : (placeholder() ?? labels().datePlaceholder) }}
       </span>
       <svg lucideCalendar [size]="16" class="shrink-0 text-surface-400"></svg>
     </button>
@@ -68,19 +55,19 @@ interface DayCell {
         <div class="flex items-center justify-between mb-2">
           <button type="button"
                   class="p-1.5 rounded-lg text-surface-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50"
-                  aria-label="Previous month" (click)="prevMonth()">
+                  [attr.aria-label]="labels().previousMonth" (click)="prevMonth()">
             <svg lucideChevronLeft [size]="16"></svg>
           </button>
           <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ monthLabel() }}</span>
           <button type="button"
                   class="p-1.5 rounded-lg text-surface-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50"
-                  aria-label="Next month" (click)="nextMonth()">
+                  [attr.aria-label]="labels().nextMonth" (click)="nextMonth()">
             <svg lucideChevronRight [size]="16"></svg>
           </button>
         </div>
 
         <div class="grid grid-cols-7 gap-1 mb-1">
-          @for (wd of weekdays; track wd) {
+          @for (wd of labels().weekdayNames; track wd) {
             <div class="text-center text-xs font-medium text-surface-400 py-1">{{ wd }}</div>
           }
         </div>
@@ -103,11 +90,12 @@ interface DayCell {
   `,
 })
 export class DatePicker implements ControlValueAccessor {
+  protected readonly labels = inject(EUI_LABELS);
   public readonly dateFormat = input<string>('dd/mm/yy');
   public readonly panelStyle = input<Record<string, string>>();
+  public readonly placeholder = input<string>();
 
   protected readonly positions = DROPDOWN_POSITIONS;
-  protected readonly weekdays = WEEKDAYS;
   protected readonly open = signal(false);
 
   protected readonly value = signal<Date | null>(null);
@@ -127,7 +115,7 @@ export class DatePicker implements ControlValueAccessor {
     return date ? this.formatDate(date, this.dateFormat()) : '';
   });
 
-  protected readonly monthLabel = computed(() => `${MONTH_NAMES[this.viewMonth()]} ${this.viewYear()}`);
+  protected readonly monthLabel = computed(() => `${this.labels().monthNames[this.viewMonth()]} ${this.viewYear()}`);
 
   protected readonly days = computed<(DayCell | null)[]>(() => {
     const year = this.viewYear();

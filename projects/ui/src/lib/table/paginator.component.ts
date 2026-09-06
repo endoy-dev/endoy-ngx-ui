@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
+import { EUI_LABELS } from '../i18n/ui-labels';
 
 export interface PageChangeEvent {
   first: number;
@@ -15,7 +16,7 @@ export interface PageChangeEvent {
     <div class="flex flex-wrap items-center justify-between gap-3 pt-1
              text-sm text-surface-600 dark:text-surface-300">
       <div class="flex items-center gap-2">
-        <label class="text-surface-500 dark:text-surface-400" [attr.for]="selectId">Rows per page</label>
+        <label class="text-surface-500 dark:text-surface-400" [attr.for]="selectId">{{ labels().rowsPerPage }}</label>
         <select #sel
                 [id]="selectId"
                 class="rounded-lg border border-surface-300 bg-surface-0 px-2 py-1 text-surface-800
@@ -39,7 +40,7 @@ export interface PageChangeEvent {
                  transition-colors duration-150 enabled:hover:bg-surface-100 disabled:opacity-40
                  dark:border-surface-700 dark:text-surface-300 dark:enabled:hover:bg-surface-800
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 dark:focus-visible:ring-primary-400/50"
-                aria-label="Previous page"
+                [attr.aria-label]="labels().previousPage"
                 [disabled]="!canPrev()"
                 (click)="prev()">
           <svg lucideChevronLeft [size]="16"></svg>
@@ -50,7 +51,7 @@ export interface PageChangeEvent {
                  transition-colors duration-150 enabled:hover:bg-surface-100 disabled:opacity-40
                  dark:border-surface-700 dark:text-surface-300 dark:enabled:hover:bg-surface-800
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 dark:focus-visible:ring-primary-400/50"
-                aria-label="Next page"
+                [attr.aria-label]="labels().nextPage"
                 [disabled]="!canNext()"
                 (click)="next()">
           <svg lucideChevronRight [size]="16"></svg>
@@ -60,6 +61,7 @@ export interface PageChangeEvent {
   `,
 })
 export class Paginator {
+  protected readonly labels = inject(EUI_LABELS);
   public readonly first = input(0);
   public readonly rows = input(10);
   public readonly totalRecords = input(0);
